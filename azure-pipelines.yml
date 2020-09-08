@@ -6,8 +6,6 @@
 trigger:
 - master
 
-pool: server
-
 steps:
 - task: ServiceNow-DevOps-Server-Job-Notification@1
   inputs:
