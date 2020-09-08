@@ -10,6 +10,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: ServiceNow-DevOps-Server-Change-Acceleration@1
+  inputs:
+    connectedServiceName: 'DevOps Connection'
 - task: ServiceNow-DevOps-Agent-Job-Notification@1
   inputs:
     connectedServiceName: 'DevOps Connection'
