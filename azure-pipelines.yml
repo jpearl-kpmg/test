@@ -10,8 +10,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: ServiceNow-DevOps-Agent-Job-Notification@1
+  inputs:
+    connectedServiceName: 'DevOps Connection'
+    Phase: 'COMPLETED'
+
+- task: ServiceNow-DevOps-Server-Change-Acceleration@1
+  inputs:
+    connectedServiceName: 'DevOps Connection'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
