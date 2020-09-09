@@ -1,19 +1,26 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+
 
 trigger:
 - master
 
-steps:
-- task: ServiceNow-DevOps-Server-Job-Notification@1
-  inputs:
-    connectedServiceName: 'DevOps Connection'
-    Phase: 'STARTED'
-- task: ServiceNow-DevOps-Server-Change-Acceleration@1
-  inputs:
-    connectedServiceName: 'DevOps Connection'
+stages:
+- stage: Build
+  jobs:
+
+  - job: 'Build'
+    pool: server
+    steps:
+    - task: ServiceNow-DevOps-Server-Job-Notification@1
+      inputs:
+        connectedServiceName: 'DevOps Connection'
+        Phase: 'STARTED'
+    - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+      inputs:
+        connectedServiceName: 'DevOps Connection'
+    - task: ServiceNow-DevOps-Server-Job-Notification@1
+      inputs:
+        connectedServiceName: 'DevOps Connection'
+        Phase: 'COMPLETED'
 
 
 
