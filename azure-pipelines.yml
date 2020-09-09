@@ -4,10 +4,10 @@ trigger:
 - master
 
 stages:
-- stage: Build
+- stage: ChangeJob
   jobs:
 
-  - job: 'Build'
+  - job: 'ChangeJob'
     pool: server
     steps:
     - task: ServiceNow-DevOps-Server-Job-Notification@1
