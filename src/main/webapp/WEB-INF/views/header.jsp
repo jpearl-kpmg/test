@@ -1,6 +1,5 @@
 <html lang="en">
     <head>
-        trying to fail pipeline
         <meta charset="utf-8">
         <title>XYZ</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
