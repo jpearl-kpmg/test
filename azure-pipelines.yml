@@ -8,7 +8,6 @@ stages:
   jobs:
 
   - job: 'AgentChangeJob'
-    pool: server
     steps:
 
     - task: ServiceNow-DevOps-Agent-Job-Notification@1
@@ -56,6 +55,7 @@ stages:
 - stage: ServerChangeJob
   jobs:
   - job: 'ServerChangeJob'
+    pool: server
     steps:
     - task: ServiceNow-DevOps-Server-Change-Acceleration@1
       inputs:
