@@ -19,20 +19,20 @@ stages:
     - task: ServiceNow-DevOps-Server-Change-Acceleration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
-    - task: ServiceNow-DevOps-Server-Artifact-Registration@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        artifactToolIdExists: true
-        artifactRegistrationPayload: |
-          {
-            "artifacts": [
-            {
-                "name": "globex-web.war",
-                "repositoryName": "CorpSite-ADO",
-                "version": "1.0.$(ChangeJob.ChangeJobId)",
-                "semanticVersion": "1.0.$(ChangeJob.ChangeJobId)"
-            }]
-          }
+    # - task: ServiceNow-DevOps-Server-Artifact-Registration@1
+    #   inputs:
+    #     connectedServiceName: 'DevOps Connection'
+    #     artifactToolIdExists: true
+    #     artifactRegistrationPayload: |
+    #       {
+    #         "artifacts": [
+    #         {
+    #             "name": "globex-web.war",
+    #             "repositoryName": "CorpSite-ADO",
+    #             "version": "1.0.$(ChangeJob.ChangeJobId)",
+    #             "semanticVersion": "1.0.$(ChangeJob.ChangeJobId)"
+    #         }]
+    #       }
 
     - task: ServiceNow-DevOps-Server-Job-Notification@1
       inputs:
