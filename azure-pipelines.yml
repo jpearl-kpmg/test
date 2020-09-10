@@ -10,13 +10,25 @@ stages:
   - job: 'ChangeJob'
     pool: server
     steps:
+
     - task: ServiceNow-DevOps-Server-Job-Notification@1
       inputs:
         connectedServiceName: 'DevOps Connection'
         Phase: 'STARTED'
+
     - task: ServiceNow-DevOps-Server-Change-Acceleration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
+
+    - task: UpdateServiceNowChangeRequest@2
+      displayName: 'Update ServiceNow Change Request'
+      inputs:
+        ServiceNowConnection: 'ServiceNow service connection'
+        ChangeRequestNumber: '$(PREDEPLOYGATE.gate1.CHANGE_REQUEST_NUMBER)'
+        NewStatus: 3
+        CloseCode: successful
+        CloseNotes: 'Application was deployed successfuly'
+
     - task: ServiceNow-DevOps-Server-Job-Notification@1
       inputs:
         connectedServiceName: 'DevOps Connection'
