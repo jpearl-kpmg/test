@@ -16,6 +16,21 @@ stages:
         connectedServiceName: 'DevOps Connection'
         Phase: 'STARTED'
 
+    - task: ServiceNow-DevOps-Server-Artifact-Registration@1
+      inputs:
+        connectedServiceName: 'DevOps Connection'
+        artifactToolIdExists: false
+        artifactRegistrationPayload: |
+          {
+            "artifacts": [
+            {
+                "name": "globex-web.war",
+                "repositoryName": "corpsite-ADO",
+                "version": "1.0.$(Build.BuildId)",
+                "semanticVersion": "1.0.$(Build.BuildId)"
+            }]
+          }
+
     - task: ServiceNow-DevOps-Server-Package-Registration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
@@ -26,36 +41,22 @@ stages:
               {
                   "name": "globex-web.war",
                   "repositoryName": "corpsite-ADO",
-                  "version": "1.0.$(ChangeJob.ChangeJobId)",
+                  "version": "1.0.$(Build.BuildId)",
                   "pipelineName":"$(system.teamProject)/$(ChangeJob.definitionName)",
-                  "taskExecutionNumber":"$(ChangeJob.ChangeJobId)",
+                  "taskExecutionNumber":"$(Build.BuildId)",
                   "stageName":"$(system.jobDisplayName)",
                   "branchName":"$(ChangeJob.sourceBranchName)"
               }],
               "pipelineName":"$(system.teamProject)/$(build.definitionName)",
-              "taskExecutionNumber":"$(ChangeJob.ChangeJobId)",
+              "taskExecutionNumber":"$(Build.BuildId)",
               "stageName":"$(system.jobDisplayName)",
               "branchName":"$(ChangeJob.sourceBranchName)"
           }
         artifactToolIdExists: false
+
     - task: ServiceNow-DevOps-Server-Change-Acceleration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
-
-    - task: ServiceNow-DevOps-Server-Artifact-Registration@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        artifactToolIdExists: false
-        artifactRegistrationPayload: |
-          {
-            "artifacts": [
-            {
-                "name": "globex-web.war",
-                "repositoryName": "CorpSite-ADO",
-                "version": "1.0.$(ChangeJob.ChangeJobId)",
-                "semanticVersion": "1.0.$(ChangeJob.ChangeJobId)"
-            }]
-          }
 
     - task: ServiceNow-DevOps-Server-Job-Notification@1
       inputs:
