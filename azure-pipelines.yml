@@ -4,23 +4,22 @@ trigger:
 - master
 
 stages:
-- stage: ChangeJob
+- stage: AgentChangeJob
   jobs:
 
-  - job: 'ChangeJob'
+  - job: 'AgentChangeJob'
     pool: server
     steps:
 
-    - task: ServiceNow-DevOps-Server-Job-Notification@1
+    - task: ServiceNow-DevOps-Agent-Job-Notification@1
       inputs:
         connectedServiceName: 'DevOps Connection'
         Phase: 'STARTED'
 
-    - task: ServiceNow-DevOps-Server-Artifact-Registration@1
+    - task: ServiceNow-DevOps-Agent-Artifact-Registration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
-        artifactToolIdExists: false
-        artifactRegistrationPayload: |
+        artifactsPayload: |
           {
             "artifacts": [
             {
@@ -31,29 +30,33 @@ stages:
             }]
           }
 
-    - task: ServiceNow-DevOps-Server-Package-Registration@1
+    - task: ServiceNow-DevOps-Agent-Package-Registration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
-        packageRegistrationPayload: |
+        packageName: "CorpsitePackage"
+        artifactsPayload: |
           {
-              "name": "CorpsitePackage",
-              "artifacts": [
-              {
-                  "name": "globex-web.war",
-                  "repositoryName": "corpsite-ADO",
-                  "version": "1.0.$(Build.BuildId)",
-                  "pipelineName":"$(system.teamProject)/$(ChangeJob.definitionName)",
-                  "taskExecutionNumber":"$(Build.BuildId)",
-                  "stageName":"$(system.jobDisplayName)",
-                  "branchName":"$(ChangeJob.sourceBranchName)"
-              }],
-              "pipelineName":"$(system.teamProject)/$(build.definitionName)",
-              "taskExecutionNumber":"$(Build.BuildId)",
-              "stageName":"$(system.jobDisplayName)",
-              "branchName":"$(ChangeJob.sourceBranchName)"
+            "name": "CorpsitePackage",
+            "artifacts": [
+            {
+                "name": "globex-web.war",
+                "repositoryName": "corpsite-ADO",
+                "version": "1.0.$(Build.BuildId)",
+                "pipelineName":"$(system.teamProject)/$(AgentChangeJob.definitionName)",
+                "taskExecutionNumber":"$(Build.BuildId)",
+                "stageName":"$(system.jobDisplayName)",
+                "branchName":"$(AgentChangeJob.sourceBranchName)"
+            }],
+            "pipelineName":"$(system.teamProject)/$(build.definitionName)",
+            "taskExecutionNumber":"$(Build.BuildId)",
+            "stageName":"$(system.jobDisplayName)",
+            "branchName":"$(AgentChangeJob.sourceBranchName)"
           }
-        artifactToolIdExists: false
 
+- stage: ServerChangeJob
+  jobs:
+  - job: 'ServerChangeJob'
+    steps:
     - task: ServiceNow-DevOps-Server-Change-Acceleration@1
       inputs:
         connectedServiceName: 'DevOps Connection'
