@@ -1,71 +1,78 @@
 
-
 trigger:
 - master
+name: $(BuildDefinitionName).$(BuildID)
+variables:
+  System.Debug: true
 
-stages:
-- stage: AgentChangeJob
-  jobs:
+jobs:
+- job: 'Build'
+  steps:
+  - task: ServiceNow-DevOps-Agent-Job-Notification@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      Phase: 'STARTED'
+  - task: ServiceNow-DevOps-Agent-Artifact-Registration@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      artifactsPayload: |
+        {
+                   "artifacts": [
+                   {
+                       "name": "globex-web.war",
+                       "repositoryName": "corpsite-ADO",
+                       "version": "1.0.$(Build.BuildId)",
+                       "semanticVersion": "1.0.$(Build.BuildId)"
+                   }]}
+  - task: ServiceNow-DevOps-Agent-Job-Notification@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      Phase: 'COMPLETED'
 
-  - job: 'AgentChangeJob'
-    steps:
+- job: 'ChangeJob'
+  pool: server
+  steps:
+  - task: ServiceNow-DevOps-Server-Job-Notification@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      UpstreamJob: 'Build'
+      Phase: 'STARTED'
 
-    - task: ServiceNow-DevOps-Agent-Job-Notification@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        Phase: 'STARTED'
-
-    - task: ServiceNow-DevOps-Agent-Artifact-Registration@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        artifactsPayload: |
-          {
-            "artifacts": [
-            {
-                "name": "globex-web.war",
-                "repositoryName": "corpsite-ADO",
-                "version": "1.0.$(Build.BuildId)",
-                "semanticVersion": "1.0.$(Build.BuildId)"
-            }]
-          }
-
-    - task: ServiceNow-DevOps-Agent-Package-Registration@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        packageName: "CorpsitePackage"
-        artifactsPayload: |
-          {
+  - task: ServiceNow-DevOps-Server-Package-Registration@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      packageRegistrationPayload: |
+        {
             "name": "CorpsitePackage",
             "artifacts": [
             {
                 "name": "globex-web.war",
                 "repositoryName": "corpsite-ADO",
-                "version": "1.0.$(Build.BuildId)",
-                "pipelineName":"$(system.teamProject)/$(AgentChangeJob.definitionName)",
-                "taskExecutionNumber":"$(Build.BuildId)",
+                "version": "1.0.$(build.buildId)",
+                "pipelineName":"$(system.teamProject)/$(build.definitionName)",
+                "taskExecutionNumber":"$(build.buildId)",
                 "stageName":"$(system.jobDisplayName)",
-                "branchName":"$(AgentChangeJob.sourceBranchName)"
+                "branchName":"$(build.sourceBranchName)"
             }],
             "pipelineName":"$(system.teamProject)/$(build.definitionName)",
-            "taskExecutionNumber":"$(Build.BuildId)",
+            "taskExecutionNumber":"$(build.buildId)",
             "stageName":"$(system.jobDisplayName)",
-            "branchName":"$(AgentChangeJob.sourceBranchName)"
-          }
+            "branchName":"$(build.sourceBranchName)"
+        }
+      artifactToolIdExists: false
 
-- stage: ServerChangeJob
-  jobs:
-  - job: 'ServerChangeJob'
-    pool: server
-    steps:
-    - task: ServiceNow-DevOps-Server-Change-Acceleration@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
+  - task: ServiceNow-DevOps-Server-Change-Acceleration@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      UpstreamJob: 'Build'
 
-    - task: ServiceNow-DevOps-Server-Job-Notification@1
-      inputs:
-        connectedServiceName: 'DevOps Connection'
-        Phase: 'COMPLETED'
 
+  - task: ServiceNow-DevOps-Server-Job-Notification@1
+    inputs:
+      connectedServiceName: 'lrochette1'
+      UpstreamJob: 'Build'
+      Phase: 'COMPLETED'
+    condition: true
 
 
 
