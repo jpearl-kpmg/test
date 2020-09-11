@@ -8,10 +8,8 @@ variables:
 jobs:
 - job: 'Build'
   steps:
-  - task: ServiceNow-DevOps-Agent-Job-Notification@1
-    inputs:
-      connectedServiceName: 'DevOps Connection'
-      Phase: 'STARTED'
+
+
   - task: ServiceNow-DevOps-Agent-Artifact-Registration@1
     inputs:
       connectedServiceName: 'DevOps Connection'
@@ -24,19 +22,12 @@ jobs:
                        "version": "1.0.$(Build.BuildId)",
                        "semanticVersion": "1.0.$(Build.BuildId)"
                    }]}
-  - task: ServiceNow-DevOps-Agent-Job-Notification@1
-    inputs:
-      connectedServiceName: 'DevOps Connection'
-      Phase: 'COMPLETED'
+ 
 
 - job: 'ChangeJob'
   pool: server
   steps:
-  - task: ServiceNow-DevOps-Server-Job-Notification@1
-    inputs:
-      connectedServiceName: 'DevOps Connection'
-      UpstreamJob: 'Build'
-      Phase: 'STARTED'
+  
 
   - task: ServiceNow-DevOps-Server-Package-Registration@1
     inputs:
@@ -67,12 +58,7 @@ jobs:
       UpstreamJob: 'Build'
 
 
-  - task: ServiceNow-DevOps-Server-Job-Notification@1
-    inputs:
-      connectedServiceName: 'DevOps Connection'
-      UpstreamJob: 'Build'
-      Phase: 'COMPLETED'
-    condition: true
+
 
 
 
