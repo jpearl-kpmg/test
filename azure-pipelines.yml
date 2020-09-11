@@ -69,7 +69,7 @@ jobs:
 
   - task: ServiceNow-DevOps-Server-Job-Notification@1
     inputs:
-      connectedServiceName: 'lrochette1'
+      connectedServiceName: 'DevOps Connection'
       UpstreamJob: 'Build'
       Phase: 'COMPLETED'
     condition: true
