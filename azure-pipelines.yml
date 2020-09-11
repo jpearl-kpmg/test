@@ -7,27 +7,24 @@ variables:
 
 jobs:
 - job: 'Build'
-  steps:
-
-
-  - task: ServiceNow-DevOps-Agent-Artifact-Registration@1
-    inputs:
-      connectedServiceName: 'DevOps Connection'
-      artifactsPayload: |
-        {
-                   "artifacts": [
-                   {
-                       "name": "globex-web.war",
-                       "repositoryName": "corpsite-ADO",
-                       "version": "1.0.$(Build.BuildId)",
-                       "semanticVersion": "1.0.$(Build.BuildId)"
-                   }]}
- 
-
-- job: 'ChangeJob'
   pool: server
   steps:
-  
+
+  - task: ServiceNow-DevOps-Server-Artifact-Registration@1
+    inputs:
+      connectedServiceName: 'DevOps Connection'
+      artifactToolIdExists: false
+      artifactRegistrationPayload: |
+        {
+                          "artifacts": [
+                          {
+                              "name": "globex-web.war",
+                              "repositoryName": "corpsite-ADO",
+                              "version": "1.0.$(Build.BuildId)",
+                              "semanticVersion": "1.0.$(Build.BuildId)"
+                          }]
+        }
+
 
   - task: ServiceNow-DevOps-Server-Package-Registration@1
     inputs:
@@ -51,6 +48,7 @@ jobs:
             "branchName":"$(build.sourceBranchName)"
         }
       artifactToolIdExists: false
+
 
   - task: ServiceNow-DevOps-Server-Change-Acceleration@1
     inputs:
